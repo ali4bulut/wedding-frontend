@@ -12,7 +12,7 @@ const progressBarFill = document.getElementById('progress-bar-fill');
 const progressText = document.getElementById('progress-text');
 
 // TODO: Set this to your deployed backend URL in production
-const API_BASE_URL = 'http://localhost:4000';
+const API_BASE_URL = 'https://wedding-backend-e34z.onrender.com/upload';
 
 let selectedFiles = [];
 
