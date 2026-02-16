@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wedding Photo Upload</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>DÜĞÜN ANILARINIZI YÜKLEYİN</h1>
+        <p>
+          Bu mutlu günü bizimle birlikte kutladığını için teşekkür ederiz. Lütfen favori fotoğraflarınızı bizimle paylaşın be sonsuza kadar bu güzel anlar bizimle kalsın.
+        </p>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="card upload-card">
+        <h2>Fotoğraflarınızı Yükleyin</h2>
+        <p class="subtitle">
+          Tek seferde 10 fotoğraf yükleyebilirsiniz. Her fotoğraf 20MB'dan az olmalı.
+        </p>
+
+        <form id="upload-form">
+          <div class="file-input-wrapper">
+            <label for="photos" class="file-label">
+              <span>Fotoğrafları Seçin</span>
+              <small>10 fotoğrafa kadar (max 20MB)</small>
+            </label>
+            <input
+              type="file"
+              id="photos"
+              name="photos"
+              accept="image/*"
+              multiple
+            />
+          </div>
+
+          <div id="preview" class="preview-grid"></div>
+
+          <div class="progress-wrapper" id="progress-wrapper" hidden>
+            <div class="progress-bar">
+              <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            </div>
+            <span id="progress-text" class="progress-text">Hazırlanıyor...</span>
+          </div>
+
+          <button type="submit" id="upload-button" class="btn-primary" disabled>
+            Fotağrafları Yükle
+          </button>
+
+          <p id="message" class="message" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>♥ Sevgi ve Saygıyla ♥</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+  </html>
+
