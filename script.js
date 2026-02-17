@@ -103,7 +103,7 @@ fileInput.addEventListener('change', async (event) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const item = document.createElement('div');
-        item.className = 'preview-item';
+        item.className = 'col-6 col-sm-4 col-md-3 preview-item';
 
         const img = document.createElement('img');
         img.src = e.target.result;

@@ -1,68 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wedding Photo Upload</title>
+    <title>Düğün Fotoğraf Yükleme</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <header class="hero">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <h1>DÜĞÜN ANILARINIZI YÜKLEYİN</h1>
-        <p>
-          Bu mutlu günü bizimle birlikte kutladığını için teşekkür ederiz. Lütfen favori fotoğraflarınızı bizimle paylaşın be sonsuza kadar bu güzel anlar bizimle kalsın.
+    <header class="header-hero">
+      <div class="header-content">
+        <!-- Kendi logonuzu buraya ekleyin: images/logo.jpg -->
+        <div class="header-logo-wrapper">
+          <img
+            src="images/logo.jpg"
+            alt="Logo"
+            class="header-logo"
+            onerror="this.style.display='none'; this.nextElementSibling.classList.add('show');"
+          />
+          <div class="header-logo-placeholder">
+            <span>images/logo.jpg</span>
+          </div>
+        </div>
+        <h1 class="display-5 fw-bold mb-2">Düğün Anılarınızı Yükleyin</h1>
+        <p class="lead mb-0">
+          Bu mutlu günü bizimle birlikte kutladığınız için teşekkür ederiz. Favori fotoğraflarınızı bizimle paylaşın, sonsuza kadar bu güzel anlar bizimle kalsın.
         </p>
       </div>
     </header>
 
-    <main class="container">
-      <section class="card upload-card">
-        <h2>Fotoğraflarınızı Yükleyin</h2>
-        <p class="subtitle">
-          Tek seferde 10 fotoğraf yükleyebilirsiniz. Her fotoğraf 20MB'dan az olmalı.
-        </p>
+    <main class="py-4 py-md-5">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-lg-8">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+              <div class="card-body p-4 p-md-5">
+                <h2 class="h4 fw-bold mb-1">Fotoğraflarınızı Yükleyin</h2>
+                <p class="text-muted mb-4">
+                  Tek seferde 10 fotoğraf yükleyebilirsiniz. Her fotoğraf 20MB'dan az olmalı.
+                </p>
 
-        <form id="upload-form">
-          <div class="file-input-wrapper">
-            <label for="photos" class="file-label">
-              <span>Fotoğrafları Seçin</span>
-              <small>10 fotoğrafa kadar (max 20MB)</small>
-            </label>
-            <input
-              type="file"
-              id="photos"
-              name="photos"
-              accept="image/*,.heic,.heif"
-              multiple
-            />
-          </div>
+                <form id="upload-form">
+                  <div class="mb-4">
+                    <label for="photos" class="file-upload-area d-block p-4 rounded-4 border border-2 border-dashed text-center cursor-pointer">
+                      <input type="file" id="photos" name="photos" accept="image/*,.heic,.heif" multiple class="d-none" />
+                      <span class="d-block fw-semibold mb-1">Fotoğrafları Seçin</span>
+                      <small class="text-muted">10 fotoğrafa kadar (max 20MB)</small>
+                    </label>
+                  </div>
 
-          <div id="preview" class="preview-grid"></div>
+                  <div id="preview" class="row g-3 mb-4 preview-grid"></div>
 
-          <div class="progress-wrapper" id="progress-wrapper" hidden>
-            <div class="progress-bar">
-              <div class="progress-bar-fill" id="progress-bar-fill"></div>
+                  <div class="progress-wrapper mb-4" id="progress-wrapper" hidden>
+                    <div class="progress rounded-pill" style="height: 10px;">
+                      <div class="progress-bar progress-bar-striped progress-bar-animated" id="progress-bar-fill" role="progressbar" style="width: 0%"></div>
+                    </div>
+                    <span id="progress-text" class="progress-text d-block mt-2 small text-muted">Hazırlanıyor...</span>
+                  </div>
+
+                  <button type="submit" id="upload-button" class="btn btn-primary btn-lg w-100 rounded-pill py-3" disabled>
+                    Fotoğrafları Yükle
+                  </button>
+
+                  <p id="message" class="message mt-3 mb-0" aria-live="polite"></p>
+                </form>
+              </div>
             </div>
-            <span id="progress-text" class="progress-text">Hazırlanıyor...</span>
           </div>
-
-          <button type="submit" id="upload-button" class="btn-primary" disabled>
-            Fotağrafları Yükle
-          </button>
-
-          <p id="message" class="message" aria-live="polite"></p>
-        </form>
-      </section>
+        </div>
+      </div>
     </main>
 
-    <footer class="footer">
-      <p>♥ Sevgi ve Saygıyla ♥</p>
+    <footer class="py-4 text-center text-muted">
+      <p class="mb-0">♥ Sevgi ve Saygıyla ♥</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
     <script src="script.js"></script>
   </body>
-  </html>
-
+</html>
