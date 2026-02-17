@@ -2,6 +2,37 @@ const MAX_FILES = 10;
 const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024;
 const MAX_WIDTH = 1920;
 
+const HEIC_TYPES = ['image/heic', 'image/heif'];
+
+function isHeicFile(file) {
+  return (
+    HEIC_TYPES.includes(file.type) ||
+    /\.heic$/i.test(file.name) ||
+    /\.heif$/i.test(file.name)
+  );
+}
+
+async function convertHeicToJpeg(file) {
+  const blob = await heic2any({
+    blob: file,
+    toType: 'image/jpeg',
+    quality: 0.9,
+  });
+  const jpegBlob = Array.isArray(blob) ? blob[0] : blob;
+  const baseName = file.name.replace(/\.(heic|heif)$/i, '.jpg');
+  return new File([jpegBlob], baseName, {
+    type: 'image/jpeg',
+    lastModified: Date.now(),
+  });
+}
+
+async function ensureImageCanLoad(file) {
+  if (isHeicFile(file)) {
+    return await convertHeicToJpeg(file);
+  }
+  return file;
+}
+
 const fileInput = document.getElementById('photos');
 const previewContainer = document.getElementById('preview');
 const uploadForm = document.getElementById('upload-form');
@@ -32,7 +63,7 @@ function updateUploadButtonState() {
   uploadButton.disabled = selectedFiles.length === 0;
 }
 
-fileInput.addEventListener('change', (event) => {
+fileInput.addEventListener('change', async (event) => {
   const files = Array.from(event.target.files || []);
   selectedFiles = [];
   resetPreview();
@@ -50,7 +81,9 @@ fileInput.addEventListener('change', (event) => {
   const limitedFiles = files.slice(0, MAX_FILES);
 
   for (const file of limitedFiles) {
-    if (!file.type.startsWith('image/')) {
+    const isValidImage =
+      file.type.startsWith('image/') || isHeicFile(file);
+    if (!isValidImage) {
       setMessage('Only image files are allowed.', 'error');
       continue;
     }
@@ -65,25 +98,31 @@ fileInput.addEventListener('change', (event) => {
 
     selectedFiles.push(file);
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const item = document.createElement('div');
-      item.className = 'preview-item';
+    try {
+      const loadableFile = await ensureImageCanLoad(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const item = document.createElement('div');
+        item.className = 'preview-item';
 
-      const img = document.createElement('img');
-      img.src = e.target.result;
-      img.alt = file.name;
-      img.className = 'preview-thumb';
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.alt = file.name;
+        img.className = 'preview-thumb';
 
-      const caption = document.createElement('div');
-      caption.className = 'preview-caption';
-      caption.textContent = file.name;
+        const caption = document.createElement('div');
+        caption.className = 'preview-caption';
+        caption.textContent = file.name;
 
-      item.appendChild(img);
-      item.appendChild(caption);
-      previewContainer.appendChild(item);
-    };
-    reader.readAsDataURL(file);
+        item.appendChild(img);
+        item.appendChild(caption);
+        previewContainer.appendChild(item);
+      };
+      reader.readAsDataURL(loadableFile);
+    } catch (err) {
+      console.error('Preview error for', file.name, err);
+      setMessage(`Could not preview "${file.name}". It may still upload.`, 'error');
+    }
   }
 
   if (selectedFiles.length === 0 && files.length > 0) {
@@ -108,12 +147,13 @@ function readFileAsImage(file) {
 }
 
 async function compressImage(file) {
-  const image = await readFileAsImage(file);
+  const loadableFile = await ensureImageCanLoad(file);
+  const image = await readFileAsImage(loadableFile);
 
   let { width, height } = image;
 
   if (width <= MAX_WIDTH) {
-    return file;
+    return loadableFile;
   }
 
   const scale = MAX_WIDTH / width;
@@ -137,7 +177,7 @@ async function compressImage(file) {
           return;
         }
 
-        const compressedFile = new File([blob], file.name, {
+        const compressedFile = new File([blob], loadableFile.name, {
           type: 'image/jpeg',
           lastModified: Date.now(),
         });
